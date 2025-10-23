@@ -1,0 +1,41 @@
+<div class="pagination">
+    <ul>
+        {% if page_obj.has_previous %}
+            <li class="prev"><a href="{{ paginator_base_url }}{{ page_obj.previous_page_number }}/{{ paginator_addition }}" class="js-paging-prev-page" title="предыдущая">&larr; предыдущая</a></li>
+        {% else %}
+            <li class="prev"><span>&larr; предыдущая</span></li>
+        {% endif %}
+        {% if page_obj.has_next %}
+            <li class="next"><a href="{{ paginator_base_url }}{{ page_obj.next_page_number }}/{{ paginator_addition }}" class="js-paging-prev-page" title="следующая">следующая &rarr;</a></li>
+        {% else %}
+            <li class="next"><span>следующая &rarr;</span></li>
+        {% endif %}
+    </ul>
+    <ul class="pagination-pages">
+        {% if page_obj.number > 5 %}
+            <li>
+                <a href="{{ paginator_base_url }}1/{{ paginator_addition }}">1</a>
+            </li>
+            <li><span>...</span></li>
+        {% endif %}
+        {% for page in page_obj.paginator.page_range %}
+            {% comment %} {% if page:page_obj.number <= 4 and page:page_obj.number >= -4 %}
+                {% if page != page_obj.number %}
+                    <li>
+                        <a href="{{ paginator_base_url }}{{ page }}/{{ paginator_addition }}">{{ page }}</a>
+                    </li>
+                {% else %}
+                    <li class="active">
+                        <span>{{ page }}</span>
+                    </li>
+                {% endif %}
+            {% endif %} {% endcomment %}
+        {% endfor %}
+        {% if page_obj.number|add:4 < page_obj.paginator.num_pages %}
+            <li><span>...</span></li>
+            <li>
+                <a href="{{ paginator_base_url }}{{ page_obj.paginator.num_pages }}/{{ paginator_addition }}">{{ page_obj.paginator.num_pages }}</a>
+            </li>
+        {% endif %}
+    </ul>
+</div>

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static index %}
+
+{% block content %}
+  <main>
+    <div class="main-container">
+      <h2>
+        New Questions
+        <span><a href="#">Hot Questions</a></span>
+      </h2>
+
+      <div class="questions-list">
+        {% for question in object_list %}
+          {% include 'question_card.html' with instance=question %}
+        {% endfor %}
+      </div>
+
+      {% include 'paginator.html' with object_list=object_list page_obj=page_obj %}
+    </div>
+
+    {% include 'aside_tags.html' %}
+  </main>
+{% endblock %}

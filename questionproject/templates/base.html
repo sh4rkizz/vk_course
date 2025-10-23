@@ -1,0 +1,52 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="{% static 'questions/css/index.css' %}" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Coming+Soon&display=swap" rel="stylesheet" />
+
+    <title>
+      {% block title %}
+        Главная страница
+      {% endblock %}
+    </title>
+  </head>
+
+  <header>
+    <div class="logo">AskPumpkin</div>
+    <div class="search">
+      <input type="text" name="search" placeholder="search" />
+      <button class="search-button">ASK!</button>
+    </div>
+    <div class="profile">
+      <div class="avatar"></div>
+      <div class="profile-info">
+        {% if user.is_authenticated %}
+          <div class="avatar-wrapper">
+            <img src="{% static 'questions/img/picture.png' %}" alt="" />
+          </div>
+          <p>FIO</p>
+          <div class="profile-actions">
+            <a href="#">settings</a>
+            <a href="#">logout</a>
+          </div>
+        {% else %}
+          <div class="profile-actions">
+            <a href="#">login</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  {% block content %}
+
+  {% endblock %}
+</html>

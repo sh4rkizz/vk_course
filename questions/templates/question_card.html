@@ -1,0 +1,4 @@
+<div class="question" data-id="{{ instance.id }}">
+  <a href="{% url 'questions:question_detail' instance.id %}">{{ instance.text }}</a>
+  <p>{{ question.description|truncate_str:50 }}</p>
+</div>
