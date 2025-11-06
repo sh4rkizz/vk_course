@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 from configparser import ConfigParser, ExtendedInterpolation
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_NAME = "questionproject"
@@ -42,7 +43,8 @@ INSTALLED_APPS = [
     'django_extensions',
 ]
 INSTALLED_APPS += [
-    'questions'
+    'questions',
+    'gramm'
 ]
 
 MIDDLEWARE = [
@@ -54,6 +56,18 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# if DEBUG:
+#     INSTALLED_APPS.append('debug_toolbar')
+#     MIDDLEWARE.insert(1, 'debug_toolbar.middleware.DebugToolbarMiddleware')
+
+#     def show_toolbar(request):
+#         return True
+#     SHOW_TOOLBAR_CALLBACK = show_toolbar
+
+#     DEBUG_TOOLBAR_CONFIG = {
+#         "SHOW_TOOLBAR_CALLBACK" : show_toolbar,
+#     }
 
 ROOT_URLCONF = 'questionproject.urls'
 
@@ -87,8 +101,12 @@ WSGI_APPLICATION = 'questionproject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': config.get('database', 'ENGINE', fallback='django.db.backends.postgresql'),
+        'NAME': config.get('database', 'NAME'),
+        'USER': config.get('database', 'USER'),
+        'PASSWORD': config.get('database', 'PASSWORD'),
+        'HOST': config.get('database', 'HOST', fallback='127.0.0.1'),
+        'PORT': config.getint('database', 'PORT', fallback=5432),
     }
 }
 
@@ -117,6 +135,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
+INTERNAL_IPS = ['0/8', '10/8', '192.168/16', '255.255.255.255']
+if DEBUG:
+    INTERNAL_IPS.append('127.0.0.1')
+
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
@@ -135,3 +157,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "questions/static/"),
     'static/',
 ]
+
+if 'collectstatic' in sys.argv:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
