@@ -31,8 +31,14 @@ class ButtonPressenView(ListAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class DetailView(LoginRequiredMixin, TemplateView):
+class DetailView(TemplateView):
     template_name = "detail.html"
+
+    def get(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse("admin:login"))
+
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
