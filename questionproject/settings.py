@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django_extensions',
 ]
 INSTALLED_APPS += [
-    'questions'
+    'questions',
+    'gramm'
 ]
 
 MIDDLEWARE = [
@@ -56,17 +57,17 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-if DEBUG:
-    INSTALLED_APPS.append('debug_toolbar')
-    MIDDLEWARE.insert(1, 'debug_toolbar.middleware.DebugToolbarMiddleware')
+# if DEBUG:
+#     INSTALLED_APPS.append('debug_toolbar')
+#     MIDDLEWARE.insert(1, 'debug_toolbar.middleware.DebugToolbarMiddleware')
 
-    def show_toolbar(request):
-        return True
-    SHOW_TOOLBAR_CALLBACK = show_toolbar
+#     def show_toolbar(request):
+#         return True
+#     SHOW_TOOLBAR_CALLBACK = show_toolbar
 
-    DEBUG_TOOLBAR_CONFIG = {
-        "SHOW_TOOLBAR_CALLBACK" : show_toolbar,
-    }
+#     DEBUG_TOOLBAR_CONFIG = {
+#         "SHOW_TOOLBAR_CALLBACK" : show_toolbar,
+#     }
 
 ROOT_URLCONF = 'questionproject.urls'
 
@@ -100,8 +101,12 @@ WSGI_APPLICATION = 'questionproject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': config.get('database', 'ENGINE', fallback='django.db.backends.postgresql'),
+        'NAME': config.get('database', 'NAME'),
+        'USER': config.get('database', 'USER'),
+        'PASSWORD': config.get('database', 'PASSWORD'),
+        'HOST': config.get('database', 'HOST', fallback='127.0.0.1'),
+        'PORT': config.getint('database', 'PORT', fallback=5432),
     }
 }
 
