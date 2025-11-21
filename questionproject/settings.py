@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django_extensions',
 ]
 INSTALLED_APPS += [
-    'questions'
+    'questions',
+    'sem4'
 ]
 
 MIDDLEWARE = [
@@ -73,7 +74,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
             "builtins": [
-                'questions.templatetags.index'
+                'questions.templatetags.index',
+                'sem4.templatetags.form_extras'
             ]
         },
     },

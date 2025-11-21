@@ -1,0 +1,35 @@
+{% load form_extras %}
+
+
+<div class="form__row">
+    <label class="form__label" for="id_{{ field.name }}">
+        {{ field.label }}: {% if field|is_required %}<span class="field__star">*</span>{% endif %}
+    </label>
+
+    {% if field|field_type == 'CharField' %}
+        <input
+            class="form__input"
+            id="id_{{ field.name }}"
+            type="{{ field.field.widget.input_type }}"
+            name="{{ field.name }}"
+            autocomplete="off"
+            {% if field|is_required %} required {% endif %}
+            value="{{ field.value|default_if_none:'' }}"
+            {% if field|is_disabled %} disabled {% endif %}
+        >
+    {% endif %}
+
+    {% if field.help_text %}
+        <div class="form__hint-wrapper">
+            <span class="form__hint">{{ field.help_text|safe }}</span>
+        </div>
+    {% endif %}
+
+    {% if field.errors %}
+        <div class="form__error-wrapper">
+            {% for error in field.errors %}
+                <span class="form__error">{{ error }}</span>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
