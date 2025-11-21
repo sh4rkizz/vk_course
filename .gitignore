@@ -2,3 +2,5 @@ db.sqlite3
 prod.conf
 .venv
 *.pyc
+collected_static/
+todo.md
