@@ -1,0 +1,32 @@
+{% extends "sem4/index.html" %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'sem4/login.css' %}" />
+{% endblock styles %}
+
+{% block content %}
+    <div class="modal">
+        <h1 class="modal__header">
+            Better Login Page
+        </h1>
+
+        <form method="post" action="" class="form">
+            {% csrf_token %}
+
+            {% for field in form %}
+                {% include 'sem4/blocks/form_field.html' %}
+            {% endfor %}
+
+            <input type="submit" value="Войти">
+
+            {% if form.non_field_errors %}
+                <div class="form__error-wrapper">
+                    {% for error in form.non_field_errors %}
+                        <span class="form__error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </form>
+    </div>
+{% endblock content %}

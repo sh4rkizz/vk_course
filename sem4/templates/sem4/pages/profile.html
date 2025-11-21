@@ -1,0 +1,42 @@
+{% extends "sem4/index.html" %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'sem4/profile.css' %}" />
+{% endblock styles %}
+
+{% block content %}
+    <div class="modal">
+        <h1 class="modal__header">
+            Better Login Page
+        </h1>
+
+        <form method="post" action="" class="form">
+            {% csrf_token %}
+
+            <div class="form__row">
+                <label class="form__label">
+                    username
+                    <input type="text" class="form__input" name="username">
+                </label>
+            </div>
+
+            <div class="form__row">
+                <label class="form__label">
+                    new password
+                    <input type="password" class="form__input" name="password">
+                </label>
+            </div>
+
+            <div class="form__row">
+                <label class="form__label">
+                    confirm password
+                    <input type="password" class="form__input" name="confirm_password">
+                </label>
+            </div>
+
+            <input type="submit" value="Войти">
+            {{ form.non_field_errors }}
+        </form>
+    </div>
+{% endblock content %}
