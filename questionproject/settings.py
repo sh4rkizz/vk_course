@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django_extensions',
 ]
 INSTALLED_APPS += [
-    'questions'
+    'questions',
+    'sem5'
 ]
 
 MIDDLEWARE = [
@@ -63,6 +64,7 @@ TEMPLATES = [
         'DIRS': [
             os.path.join(BASE_DIR, "questions", 'templates'),
             os.path.join(BASE_DIR, "questionproject", 'templates'),
+            os.path.join(BASE_DIR, "sem5", 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -135,3 +137,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "questions/static/"),
     'static/',
 ]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_URL = 'uploads/'
