@@ -25,12 +25,10 @@ class LikeManager(models.Manager):
         return user_like
 
 
-def get_upload_userimage_path(instance):
-    ...
 
 class UserImage(models.Model):
     title = models.CharField(max_length=255)
-    file = models.ImageField(upload_to=get_upload_userimage_path)
+    file = models.ImageField(upload_to='images/')
 
     author = models.ForeignKey("auth.User", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

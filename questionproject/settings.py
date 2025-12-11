@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 from configparser import ConfigParser, ExtendedInterpolation
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_NAME = "questionproject"
@@ -131,12 +132,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
+if 'collectstatic' in sys.argv:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
+
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "questionproject/static/"),
-    os.path.join(BASE_DIR, "questions/static/"),
-    'static/',
-]
+ALLOWED_HOSTS = ['*']
+
+if DEBUG:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, "questionproject/static/"),
+        os.path.join(BASE_DIR, "questions/static/"),
+        'static/',
+    ]
+
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
-MEDIA_URL = "uploads/"
+MEDIA_URL = '/media/'
