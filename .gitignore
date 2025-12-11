@@ -3,3 +3,4 @@ prod.conf
 .venv
 *.pyc
 media/
+collected_static/

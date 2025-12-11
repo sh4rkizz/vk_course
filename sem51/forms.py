@@ -15,9 +15,9 @@ class UserImageForm(forms.ModelForm):
         instance = super().save(False)
         instance.author_id = self.author_id
 
-        profile = getattr(instance, "profile", None)
-        if profile is None:
-            profile = instance.create_profile()
+        # profile = getattr(instance, "profile", None)
+        # if profile is None:
+            # profile = instance.create_profile()
 
         if commit:
             instance.save()
