@@ -1,0 +1,173 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat {{ chat.id }}</title>
+    <link rel="stylesheet" href="{% static 'sem7/chat.css' %}" />
+    <script src="https://unpkg.com/centrifuge@5.4.0/dist/centrifuge.js"></script>
+  </head>
+
+  <body class="page">
+    <div class="page__container">
+      <header class="chat-header">
+        <h1 class="chat-header__title">Чат #{{ chat.pk }}</h1>
+        <span class="chat-header__info">{{ chat.users|length }} собеседников</span>
+      </header>
+
+      <section class="chat">
+        <div class="chat__messages">
+          {% for message in chat.last_messages %}
+            <div class="chat-message {% if message.author_id == request.user.pk %}
+                chat-message--mine
+              {% else %}
+                chat-message--theirs
+              {% endif %}"
+              data-id="{{ message.id }}">
+              <div class="chat-message__content">
+                <p class="chat-message__text">{{ message.text }}</p>
+
+                <div class="chat-message__meta">
+                  <span class="chat-message__author">{{ message.author.email }}</span>
+                  <time class="chat-message__time">{{ message.created_at }}</time>
+                </div>
+              </div>
+            </div>
+          {% empty %}
+            <div class="chat__empty">сообщений пока нет</div>
+          {% endfor %}
+        </div>
+      </section>
+
+      <form class="chat-form" id="chat-form" data-chat-id="{{ chat.pk }}">
+        {% csrf_token %}
+        <input type="text" name="text" class="chat-form__input" placeholder="Введите сообщение…" autocomplete="off" required />
+        <button type="submit" class="chat-form__submit">Отправить</button>
+      </form>
+    </div>
+  </body>
+</html>
+
+
+<div class="chat-message template" data-search="msg-template-block">
+    <div class="chat-message__content">
+    <p class="chat-message__text" data-search="msg-template-text">{{ message.text }}</p>
+
+    <div class="chat-message__meta">
+        <span class="chat-message__author" data-search="msg-template-author"></span>
+        <time class="chat-message__time" data-search="msg-template-created-at"></time>
+    </div>
+    </div>
+</div>
+
+
+<script>
+  const form = document.getElementById('chat-form')
+  const messagesContainer = document.getElementById('chat-messages')
+  const chatId = form.dataset.chatId
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+
+    const input = form.querySelector("input[name='text']")
+    const text = input.value.trim()
+    if (!text) return
+
+    const response = await fetch(`/sem7/chat/${chatId}/messages/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+      },
+      body: JSON.stringify({ text })
+    })
+
+    if (!response.ok) {
+      alert('Ошибка отправки сообщения')
+      return
+    }
+
+    const { message } = await response.json()
+
+    // убрать "сообщений пока нет"
+    const empty = document.getElementById('chat-empty')
+    if (empty) empty.remove()
+
+    // добавить сообщение в DOM
+    const messageEl = document.createElement('div')
+    messageEl.className = 'chat-message chat-message--mine'
+    messageEl.dataset.id = message.id
+
+    messageEl.innerHTML = `
+          <div class="chat-message__content">
+              <p class="chat-message__text"></p>
+              <div class="chat-message__meta">
+              <span class="chat-message__author">${message.author}</span>
+              <time class="chat-message__time">${message.created_at}</time>
+              </div>
+          </div>
+      `
+    messageEl.querySelector('.chat-message__text').textContent = message.text
+
+    messagesContainer.appendChild(messageEl)
+
+    // очистить поле и скролл вниз
+    input.value = ''
+    messagesContainer.scrollTop = messagesContainer.scrollHeight
+  })
+
+  const CENTRIFUGO_URL = "{{ centrifuge_url }}"
+  const CENTRIFUGO_TOKEN = "{{ centrifuge_token }}"
+  const CENTRIFUGO_CHANNEL = "{{ centrifuge_channel }}"
+
+  const centrifuge = new Centrifuge(`ws://${CENTRIFUGO_URL}/connection/websocket`, { token: CENTRIFUGO_TOKEN })
+
+  centrifuge
+    .on('connecting', function (ctx) {
+      console.log(`connecting: ${ctx.code}, ${ctx.reason}`)
+    })
+    .on('connected', function (ctx) {
+      console.log(`connected over ${ctx.transport}`)
+    })
+    .on('disconnected', function (ctx) {
+      console.log(`disconnected: ${ctx.code}, ${ctx.reason}`)
+    })
+    .connect()
+
+  const sub = centrifuge.newSubscription(CENTRIFUGO_CHANNEL);
+
+  sub
+    .on('publication', function (ctx) {
+      const {message} = ctx.data;
+      const {id, text, author, created_at} = message;
+
+      const msgContainer = document.querySelector(".chat__messages");
+      const msgTemplate = document.querySelector(".chat-message.template");
+
+      const newMsgElement = msgTemplate.cloneNode(true) // True чтобы рекурсинвно копировать внутренности
+      newMsgElement.querySelector(`[data-search="msg-template-text"]`).textContent = text;
+      newMsgElement.querySelector(`[data-search="msg-template-author"]`).textContent = author.email;
+      newMsgElement.querySelector(`[data-search="msg-template-created-at"]`).textContent = created_at;
+
+      if (author.id == "{{ user.id }}") {
+          newMsgElement.classList.add("chat-message--mine");
+      } else {
+          newMsgElement.classList.add("chat-message--theirs");
+      }
+
+      newMsgElement.classList.remove("template");
+      msgContainer.appendChild(newMsgElement);
+    })
+    .on('subscribing', function (ctx) {
+      console.log(`subscribing: ${ctx.code}, ${ctx.reason}`)
+    })
+    .on('subscribed', function (ctx) {
+      console.log('subscribed', ctx)
+    })
+    .on('unsubscribed', function (ctx) {
+      console.log(`unsubscribed: ${ctx.code}, ${ctx.reason}`)
+    })
+    .subscribe()
+</script>

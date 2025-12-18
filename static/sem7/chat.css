@@ -1,0 +1,150 @@
+/* ===== Page ===== */
+.page {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #f5f6f8;
+    margin: 0;
+}
+
+.page__container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ===== Header ===== */
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.chat-header__title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.chat-header__info {
+    font-size: 14px;
+    color: #666;
+}
+
+/* ===== Chat ===== */
+.chat {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.chat__messages {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ===== Message ===== */
+.chat-message {
+    display: flex;
+    max-width: 70%;
+}
+
+/* My messages */
+.chat-message--mine {
+    align-self: flex-end;
+    justify-content: flex-end;
+}
+
+.chat-message--mine .chat-message__content {
+    background-color: #4f46e5;
+    color: #fff;
+    border-bottom-right-radius: 4px;
+}
+
+/* Their messages */
+.chat-message--theirs {
+    align-self: flex-start;
+}
+
+.chat-message--theirs .chat-message__content {
+    background-color: #f0f2f5;
+    color: #222;
+    border-bottom-left-radius: 4px;
+}
+
+.chat-message__content {
+    padding: 10px 14px;
+    border-radius: 12px;
+}
+
+.chat-message__text {
+    margin: 0 0 6px 0;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* ===== Meta ===== */
+.chat-message__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 11px;
+    opacity: 0.8;
+}
+
+.chat-message__author {
+    font-weight: 500;
+}
+
+.chat-message__time {
+    white-space: nowrap;
+}
+
+/* ===== Empty state ===== */
+.chat__empty {
+    padding: 40px 0;
+    text-align: center;
+    font-size: 14px;
+    color: #9ca3af;
+    /* серый */
+}
+
+/* ===== Chat form ===== */
+.chat-form {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #e6e8eb;
+}
+
+.chat-form__input {
+    flex: 1;
+    padding: 12px 14px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    outline: none;
+}
+
+.chat-form__input:focus {
+    border-color: #4f46e5;
+}
+
+.chat-form__submit {
+    padding: 0 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    background-color: #4f46e5;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.chat-form__submit:hover {
+    background-color: #4338ca;
+}
+
+.chat-message.template { display: none; }

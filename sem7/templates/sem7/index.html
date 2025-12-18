@@ -1,0 +1,43 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Главная</title>
+    <link rel="stylesheet" href="{% static 'sem7/styles.css' %}" />
+  </head>
+
+  <body class="page">
+    <div class="page__container">
+        <h4>{{ quote }}</h4>
+
+      <h1 class="page__title">Список чатов</h1>
+
+      <table class="chat-table">
+        <thead class="chat-table__head">
+          <tr class="chat-table__row chat-table__row--head">
+            <th class="chat-table__cell chat-table__cell--head">ID</th>
+            <th class="chat-table__cell chat-table__cell--head">Количество собеседников</th>
+            <th class="chat-table__cell chat-table__cell--head">Последнее сообщение</th>
+            <th class="chat-table__cell chat-table__cell--head">Переход</th>
+          </tr>
+        </thead>
+
+        <tbody class="chat-table__body">
+          {% for chat in chats %}
+            <tr class="chat-table__row">
+              <td class="chat-table__cell">#{{ chat.pk }}</td>
+              <td class="chat-table__cell">{{ chat.users|length }}</td>
+              <td class="chat-table__cell chat-table__cell--message">{{ chat.last_messages|last }}</td>
+              <td class="chat-table__cell">
+                <a href="{% url 'sem7:chat_page' chat.id %}" class="chat-table__link">Перейти в чат</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
