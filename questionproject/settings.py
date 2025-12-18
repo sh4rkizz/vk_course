@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django_extensions',
 ]
 INSTALLED_APPS += [
-    'questions'
+    'questions',
+    'sem7'
 ]
 
 MIDDLEWARE = [
@@ -63,6 +64,7 @@ TEMPLATES = [
         'DIRS': [
             os.path.join(BASE_DIR, "questions", 'templates'),
             os.path.join(BASE_DIR, "questionproject", 'templates'),
+            os.path.join(BASE_DIR, "sem7", 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -112,6 +114,13 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": "/var/tmp/django_cache",
+    }
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -135,3 +144,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "questions/static/"),
     'static/',
 ]
+
+CENTRIFUGO_HMAC_SECRET = "secret"
+CENTRIFUGO_URL = "localhost:8010"
+CENTRIFUGO_API_KEY = "secret"
